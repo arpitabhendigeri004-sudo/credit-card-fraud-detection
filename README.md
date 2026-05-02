@@ -43,7 +43,8 @@ Credit card fraud causes significant financial losses. Detecting fraud in real-t
 ## 📸 Visualizations
 
 ### Confusion Matrix
-![Confusion Matrix](images/confusion_matrix.png)
+<img width="960" height="540" alt="ss" src="https://github.com/user-attachments/assets/2aa0bcda-012a-4e52-b3d1-e53dc7437e2b" /><img width="960" height="540" alt="ss" src="https://github.com/user-attachments/assets/c02e6b2e-8437-4a16-8a19-73e7fd8c92fc" />
+
 
 ---
 
