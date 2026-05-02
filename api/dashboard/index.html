@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fraud Detection Dashboard</title>
+
+    <style>
+        body {
+            background-color: #0b1b3b;
+            color: white;
+            font-family: Arial;
+            text-align: center;
+            padding: 40px;
+        }
+
+        textarea {
+            width: 80%;
+            height: 120px;
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            background-color: #4fc3f7;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #29b6f6;
+        }
+
+        #result {
+            margin-top: 30px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .ALLOW { color: lightgreen; }
+        .FLAG { color: orange; }
+        .REVIEW { color: red; }
+    </style>
+</head>
+
+<body>
+
+<h1>💳 Fraud Detection Dashboard</h1>
+
+<p>Enter 30 features (comma separated)</p>
+
+<textarea id="features">
+0,-1.35,-0.07,2.53,1.37,-0.33,0.46,0.23,0.09,0.36,0.09,-0.55,-0.61,-0.99,-0.31,1.46,-0.47,0.20,0.02,0.40,0.25,-0.01,0.27,-0.11,0.06,0.12,-0.18,0.13,-0.02,149.62
+</textarea>
+
+<br>
+<button onclick="predict()">Predict</button>
+
+<div id="result"></div>
+
+<script>
+async function predict() {
+
+    const input = document.getElementById("features").value;
+    const features = input.split(",").map(Number);
+
+    try {
+        const response = await fetch("http://127.0.0.1:8000/predict", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ features: features })
+        });
+
+        const data = await response.json();
+
+        let factors = "";
+        for (let key in data.top_risk_factors) {
+            factors += `<li>${key}: ${data.top_risk_factors[key].toFixed(4)}</li>`;
+        }
+
+        document.getElementById("result").innerHTML = `
+            <h2 class="${data.decision}">Decision: ${data.decision}</h2>
+            <p>Fraud Probability: ${data.fraud_probability.toFixed(4)}</p>
+            <h3>Top Risk Factors:</h3>
+            <ul>${factors}</ul>
+        `;
+
+    } catch (error) {
+        document.getElementById("result").innerHTML = "❌ Error connecting to API";
+    }
+}
+</script>
+
+</body>
+</html>
